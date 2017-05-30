@@ -19,13 +19,15 @@ def process_image(img, scale, isotropic, crop, mean):
         min_length = tf.minimum(img_shape[0], img_shape[1])
         new_shape = tf.to_int32((scale / min_length) * img_shape)
     else:
-        new_shape = tf.pack([scale, scale])
+        new_shape = tf.stack([scale, scale])
+
+    # Errors here. 
     img = tf.image.resize_images(img, new_shape[0], new_shape[1])
     # Center crop
     # Use the slice workaround until crop_to_bounding_box supports deferred tensor shapes
     # See: https://github.com/tensorflow/tensorflow/issues/521
     offset = (new_shape - crop) / 2
-    img = tf.slice(img, begin=tf.pack([offset[0], offset[1], 0]), size=tf.pack([crop, crop, -1]))
+    img = tf.slice(img, begin=tf.stack([offset[0], offset[1], 0]), size=tf.stack([crop, crop, -1]))
     # Mean subtraction
     return tf.to_float(img) - mean
 

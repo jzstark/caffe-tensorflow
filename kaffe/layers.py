@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import re
 import numbers
 from collections import namedtuple
@@ -59,6 +61,7 @@ class NodeKind(LayerType):
 
     @staticmethod
     def map_raw_kind(kind):
+        # Return Supported layer type
         if kind in LAYER_TYPES:
             return kind
         return None
